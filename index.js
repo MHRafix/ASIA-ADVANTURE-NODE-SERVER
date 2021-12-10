@@ -33,6 +33,8 @@ async function run() {
         const packagesCollection = database.collection('travelPackages');
         const bookingCollection = database.collection('BookedPackages');
         const savedTripCollection = database.collection('SavedTrip');
+        const resturantsCollection = database.collection('ResturantBranch');
+        const cartedFoodsCollection = database.collection('FoodsCartList');
         
 
         /*******************
@@ -59,6 +61,27 @@ async function run() {
         app.post('/savedTrip', async (req, res) => {
             const favTrip = req.body;
             const result = await savedTripCollection.insertOne(favTrip);
+            res.json(result);
+        });
+
+        // Save the foods in the resturants branch data
+        app.post('/foods', async (req, res) => {
+            const food = req.body;
+            const result = await resturantsCollection.insertOne(food);
+            res.json(result);
+        });
+
+        // Save the foods in the resturants branch data
+        app.post('/foods', async (req, res) => {
+            const food = req.body;
+            const result = await resturantsCollection.insertOne(food);
+            res.json(result);
+        });
+
+        // Save the carted food data in the FoodCartList
+        app.post('/foodsCartList', async (req, res) => {
+            const cartedFood = req.body;
+            const result = await cartedFoodsCollection.insertOne(cartedFood);
             res.json(result);
         });
 
@@ -89,6 +112,13 @@ async function run() {
             res.send(savedTrip);
         });
 
+        // Get foods data from the mongodb database
+        app.get('/foods', async (req, res) => {
+            const findFoods = resturantsCollection.find({});
+            const foods = await findFoods.toArray();
+            res.send(foods);
+        });
+
 
 
         /*********************************
@@ -100,6 +130,14 @@ async function run() {
             const query = { _id:ObjectId(id) };
             const result = await bookingCollection.deleteOne(query);
             console.log(query);
+            res.json(result);
+        });
+
+        // Delete selected saved trip from the database
+        app.delete('/savedTrip/:id', async(req, res) => {
+            const id = req.params.id;
+            const query = { _id:ObjectId(id) };
+            const result = await savedTripCollection.deleteOne(query);
             res.json(result);
         });
 
