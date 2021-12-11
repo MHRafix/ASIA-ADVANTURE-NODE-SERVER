@@ -64,12 +64,6 @@ async function run() {
             res.json(result);
         });
 
-        // Save the foods in the resturants branch data
-        app.post('/foods', async (req, res) => {
-            const food = req.body;
-            const result = await resturantsCollection.insertOne(food);
-            res.json(result);
-        });
 
         // Save the foods in the resturants branch data
         app.post('/foods', async (req, res) => {
@@ -106,7 +100,7 @@ async function run() {
         });
 
         // Get saved trip data from the mongodb database
-        app.get('/savedTrip/:email', async (req, res) => {
+        app.get('/savedTrip', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
             console.log(email);
