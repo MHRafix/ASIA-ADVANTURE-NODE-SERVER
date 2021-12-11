@@ -101,11 +101,9 @@ async function run() {
 
         // Get saved trip data from the mongodb database
         app.get('/savedTrip', async (req, res) => {
-            const email = req.params.email;
-            const query = { email: email };
-            console.log(email);
-            const findSavedTrip = await savedTripCollection.findOne(query);
-            res.send(findSavedTrip);
+            const findSavedTrip = savedTripCollection.find({});
+            const trip = await findSavedTrip.toArray();
+            res.send(trip);
 
             
         
