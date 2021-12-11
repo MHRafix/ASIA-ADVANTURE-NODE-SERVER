@@ -106,10 +106,15 @@ async function run() {
         });
 
         // Get saved trip data from the mongodb database
-        app.get('/savedTrip', async (req, res) => {
-            const findSavedTrip = savedTripCollection.find({});
-            const savedTrip = await findSavedTrip.toArray();
-            res.send(savedTrip);
+        app.get('/savedTrip/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            console.log(email);
+            const findSavedTrip = await savedTripCollection.findOne(query);
+            res.send(findSavedTrip);
+
+            
+        
         });
 
         // Get foods data from the mongodb database
