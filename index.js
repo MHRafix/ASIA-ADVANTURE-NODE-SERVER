@@ -115,6 +115,13 @@ async function run() {
             const foods = await findFoods.toArray();
             res.send(foods);
         });
+       
+        // Get carted foods data from the mongodb database
+        app.get('/foodsCartList', async (req, res) => {
+            const findCartFoods = cartedFoodsCollection.find({});
+            const cartFood = await findCartFoods.toArray();
+            res.send(cartFood);
+        });
 
 
 
