@@ -87,6 +87,13 @@ async function run() {
         // Get the packages data from the database using get api
         app.get('/travelPackages', async (req, res) => {
             const findPackages = packagesCollection.find({});
+            const packages = await findPackages.limit(6).toArray();
+            res.send(packages);
+        });
+  
+        // Get the packages data from the database using get api
+        app.get('/allTravelPackage', async (req, res) => {
+            const findPackages = packagesCollection.find({});
             const packages = await findPackages.toArray();
             res.send(packages);
         });
@@ -105,12 +112,17 @@ async function run() {
             const trip = await findSavedTrip.toArray();
             res.send(trip);
 
-            
-        
         });
 
         // Get foods data from the mongodb database
         app.get('/foods', async (req, res) => {
+            const findFoods = resturantsCollection.find({});
+            const foods = await findFoods.limit(6).toArray();
+            res.send(foods);
+        });
+
+        // Get foods data from the mongodb database
+        app.get('/allFoods', async (req, res) => {
             const findFoods = resturantsCollection.find({});
             const foods = await findFoods.toArray();
             res.send(foods);
