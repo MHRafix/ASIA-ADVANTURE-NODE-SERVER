@@ -5,14 +5,16 @@ const { MongoClient } = require('mongodb');
 const cors = require('cors');
 require('dotenv').config();
 const ObjectId = require('mongodb').ObjectId;
+const fileUpload = require('express-fileupload');
+
 // App and Port
 const app = express();
 const port = process.env.PORT || 5000;
 
-
 // MidleWere
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload());
 
 
 // Server to database connection uri
@@ -35,6 +37,7 @@ async function run() {
         const savedTripCollection = database.collection('SavedTrip');
         const resturantsCollection = database.collection('ResturantBranch');
         const cartedFoodsCollection = database.collection('FoodsCartList');
+        const orderedFoodsCollection = database.collection('OrderedFoods');
         
 
         /*******************
@@ -43,9 +46,21 @@ async function run() {
 
         // Post Package API
         app.post('/travelPackages', async(req, res) => {
-        const tripPack = req.body;
-        const result = await packagesCollection.insertOne(tripPack);
-        res.json(result);
+            const image = req.files.thumbnail;
+            const thumbnailData = image.data;
+            const encodedThumb = thumbnailData.toString('base64');
+            const thumbnailBuf = Buffer.from(encodedThumb, 'base64');
+            const food = {
+                infoData: req.body,
+                thumbnail: thumbnailBuf
+            };
+
+            const result = await packagesCollection.insertOne(food);
+            res.json(result);
+
+        // const tripPack = req.body;
+        // const result = await packagesCollection.insertOne(tripPack);
+        // res.json(result);
        
         });
  
@@ -64,10 +79,17 @@ async function run() {
             res.json(result);
         });
 
-
         // Save the foods in the resturants branch data
-        app.post('/foods', async (req, res) => {
-            const food = req.body;
+        app.post('/addFoods', async (req, res) => {
+            const image = req.files.thumbnail;
+            const thumbnailData = image.data;
+            const encodedThumb = thumbnailData.toString('base64');
+            const thumbnailBuf = Buffer.from(encodedThumb, 'base64');
+            const food = {
+                infoData: req.body,
+                thumbnail: thumbnailBuf
+            };
+
             const result = await resturantsCollection.insertOne(food);
             res.json(result);
         });
@@ -76,6 +98,13 @@ async function run() {
         app.post('/foodsCartList', async (req, res) => {
             const cartedFood = req.body;
             const result = await cartedFoodsCollection.insertOne(cartedFood);
+            res.json(result);
+        });
+
+        // Save the ordered food data in the order list
+        app.post('/orderedFoods', async (req, res) => {
+            const orderFood = req.body;
+            const result = await orderedFoodsCollection.insertOne(orderFood);
             res.json(result);
         });
 
